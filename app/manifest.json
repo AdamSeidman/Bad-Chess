@@ -1,14 +1,16 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Bad Chess Player Extension",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Adam Seidman",
     "short_name": "Bad Chess",
     "content_scripts": [
         {
           "matches": [
             "http://www.chess.com/game/*",
-            "https://www.chess.com/game/*"
+            "https://www.chess.com/game/*",
+            "http://www.chess.com/play/*",
+            "https://www.chess.com/play/*"
           ],
           "js": ["content.js"]
         }
