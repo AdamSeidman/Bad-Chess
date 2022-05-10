@@ -5,6 +5,7 @@ class PieceType {
     static Bishop = new PieceType("b", "Bishop")
     static Queen = new PieceType("q", "Queen")
     static King = new PieceType("k", "King")
+    static Empty = new PieceType("e", "Empty")
 
     constructor(symbol, name) {
         this.symbol = symbol
@@ -42,8 +43,48 @@ var getPieces = function() {
 }
 
 var printPieces = function() {
-    console.log("Pieces: ")
-    getPieces().forEach(el => console.log(el.toString()))
+    console.log(getFEN(getPieces(), true, "KQkq", "-", 0, 1))
 }
 
-printPieces()
+var getFEN = function(pieces, isWhite, castleString, epString, halfMoves, fullMoves) {
+    pieces.sort((a, b) => {
+        if (b.row - a.row === 0) {
+            return a.col - b.col
+        }
+        return b.row - a.row
+    })
+    let blankPieces = 0, row = 8, col = 1, fen = "", index = 0
+    while (row > 0) {
+        if (pieces[index].row === row && pieces[index].col === col) {
+            if (blankPieces > 0) {
+                fen = `${fen}${blankPieces}`
+            }
+            symbol = pieces[index].piece.symbol
+            if (pieces[index].isWhite) {
+                symbol = symbol.toUpperCase()
+            }
+            fen = `${fen}${symbol}`
+            blankPieces = 0
+            index = (index + 1) % pieces.length
+        } else {
+            ++blankPieces
+        }
+
+        ++col
+        if (col === 9) {
+            if (blankPieces > 0) {
+                fen = `${fen}${blankPieces}`
+            }
+            --row
+            blankPieces = 0
+            col = 1
+            if (row > 0) {
+                fen = `${fen}/`
+            }
+        }
+    }
+    fen = `${fen} ${isWhite ? "w" : "b"} ${castleString} ${epString} ${halfMoves} ${fullMoves}`
+    return fen
+}
+
+window.addEventListener("click", printPieces)
