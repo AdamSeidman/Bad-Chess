@@ -42,8 +42,43 @@ var getPieces = function() {
     return pieces
 }
 
+var getPiece = function(pieces, item) {
+    item = item.substring(item.length - 2)
+    let col = parseInt(item.substring(0, 1))
+    let row = parseInt(item.substring(1))
+    return pieces.find(x => x.row === row && x.col === col)
+}
+
+var getPlayer = function(pieces) {
+    let squares = []
+    for (let el of document.getElementsByClassName("highlight")) {
+        for (let _class of el.classList.value.split(" ")) {
+            if (_class.startsWith("square")) {
+                squares.push(_class)
+            }
+        }
+    }
+    if (squares.length > 2) {
+        let excludeSquares = []
+        for (let el of document.getElementsByClassName("hover-square")) {
+            for (let _class of el.classList.value.split(" ")) {
+                excludeSquares.push(_class)
+            }
+        }
+        squares = squares.filter(x => !excludeSquares.includes(x))
+    } else if (squares.length < 2) {
+        return true
+    }
+    let piece = getPiece(pieces, squares[0])
+    if (piece === undefined) {
+        piece = getPiece(pieces, squares[1])
+    }
+    return !piece.isWhite
+}
+
 var printPieces = function() {
-    console.log(getFEN(getPieces(), true, "KQkq", "-", 0, 1))
+    let pieces = getPieces()
+    console.log(getFEN(pieces, getPlayer(pieces), "KQkq", "-", 0, 1))
 }
 
 var getFEN = function(pieces, isWhite, castleString, epString, halfMoves, fullMoves) {
