@@ -123,3 +123,4 @@ var getFEN = function(pieces, isWhite, castleString, epString, halfMoves, fullMo
 }
 
 window.addEventListener("click", printPieces)
+printPieces()
